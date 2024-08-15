@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación de Alerta Sísmica</title>
+    <style>    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    text-align: center;
+    background-color: #ff5722;
+    color: white;
+    padding: 20px;
+    width: 100%;
+}
+
+.logo {
+    width: 120px;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 15px 0;
+    background-color: #ffffff;
+}
+
+.controls button {
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: #f1f1f1;
+}
+
+.status {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 25px 0;
+}
+
+.status-item {
+    width: 30%;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    padding: 25px;
+    position: relative;
+}
+
+.status-item h2 {
+    margin: 0;
+}
+
+.status-item p {
+    margin: 10px 0;
+}
+
+.alert {
+    background-color: #ffeb3b;
+}
+
+.inactive {
+    background-color: #e0e0e0;
+}
+
+.connected {
+    background-color: #b2dfdb;
+}
+
+footer {
+    background-color: #ffffff;
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    position: fixed;
+    bottom: 0;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-around;
+}
+
+.navigation a {
+    text-decoration: none;
+    color: #333333;
+    padding: 12px;
+    font-size: 14px;
+}
+
+footer p {
+    font-size: 12px;
+    color: #777777;
+}
+
+/* Estilo para el botón de solicitar ubicación */
+.status-item button {
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.status-item button:hover {
+    background-color: #e64a19;
+}
+
+/* Ocultar elementos */
+.hidden {
+    display: none;
+}</style>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Logo de la aplicación" class="logo">
+        <h1>¡Buenas noches, Usuario!</h1>
+        <p>Ubicación actual: Ciudad de México</p>
+        <p>Recibirás alertas sísmicas para esta ubicación</p>
+    </header>
+
+    <section class="controls">
+        <button onclick="mostrarSonido()">¿Cómo sonarán las alertas?</button>
+        <button onclick="simularSismos()">Simulador de sismos</button>
+        <button onclick="verificarAlertas()">¿No recibes alertas?</button>
+        <button onclick="enviarNotificacion()">Enviar Notificación</button>
+    </section>
+
+    <section class="status">
+        <div class="status-item alert" id="alert">
+            <h2>¡ALERTA!</h2>
+            <p>Revisa tu configuración</p>
+            <button onclick="solicitarUbicacion()">Solicitar ubicación</button>
+        </div>
+        <div class="status-item inactive">
+            <h2>Inactivo</h2>
+            <p>Suscripción PREMIUM</p>
+        </div>
+        <div class="status-item connected" id="internet-status">
+            <h2>Conectado</h2>
+            <p>Conexión a internet</p>
+        </div>
+    </section>
+
+    <footer>
+        <nav class="navigation">
+            <a href="#">Inicio</a>
+            <a href="#">Premium</a>
+            <a href="#">En vivo</a>
+            <a href="#">Ajustes</a>
+        </nav>
+        <p>Conectado al servidor de notificaciones sísmicas.</p>
+    </footer>
+
+    <script>
+        // Función para enviar una notificación
+        function enviarNotificacion() {
+            if (!("Notification" in window)) {
+                alert("Este navegador no soporta notificaciones.");
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                new Notification("¡Notificación enviada!", {
+                    body: "Este es un mensaje de prueba para la notificación.",
+                    icon: "logo.png"  // Puedes reemplazar con una ruta a un ícono de notificación
+                });
+            } else if (Notification.permission === "denied") {
+                alert("Las notificaciones están desactivadas.");
+            } else {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        new Notification("¡Notificación enviada!", {
+                            body: "Este es un mensaje de prueba para la notificación.",
+                            icon: "logo.png"
+                        });
+                    } else {
+                        alert("Permiso para notificaciones denegado.");
+                    }
+                });
+            }
+        }
+
+        function actualizarEstadoInternet() {
+            const statusElement = document.getElementById('internet-status');
+            if (navigator.onLine) {
+                statusElement.innerHTML = <h2>Conectado</h2><p>Conexión a internet</p>;
+                statusElement.classList.remove('inactive');
+                statusElement.classList.add('connected');
+            } else {
+                statusElement.innerHTML = <h2>Desconectado</h2><p>Sin conexión a internet</p>;
+                statusElement.classList.remove('connected');
+                statusElement.classList.add('inactive');
+            }
+        }
+
+        function solicitarUbicacion() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        obtenerDireccion(lat, lng);
+                    },
+                    function(error) {
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                alert("Permiso denegado por el usuario.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                alert("La información de ubicación no está disponible.");
+                                break;
+                            case error.TIMEOUT:
+                                alert("El tiempo para obtener la ubicación ha expirado.");
+                                break;
+                            case error.UNKNOWN_ERROR:
+                                alert("Se ha producido un error desconocido.");
+                                break;
+                        }
+                    }
+                );
+            } else {
+                alert("La geolocalización no es soportada por este navegador.");
+            }
+        }
+
+        function obtenerDireccion(lat, lng) {
+            const url = https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=YOUR_GOOGLE_MAPS_API_KEY;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.results.length > 0) {
+                        const direccion = data.results[0].formatted_address;
+                        alert(Ubicación obtenida:\nLatitud: ${lat}\nLongitud: ${lng}\nDirección: ${direccion});
+                    } else {
+                        alert("No se pudo obtener la dirección.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener la dirección:', error);
+                    alert("Se produjo un error al obtener la dirección.");
+                });
+        }
+
+        function mostrarSonido() {
+            alert("Aquí se mostrará cómo sonarán las alertas.");
+        }
+
+        function simularSismos() {
+            alert("Aquí se simularán los sismos.");
+        }
+
+        function verificarAlertas() {
+            alert("Aquí se verificará si hay problemas con las alertas.");
+        }
+
+        // Inicializar estado de internet al cargar la página
+        window.addEventListener('load', actualizarEstadoInternet);
+
+        // Escuchar cambios en el estado de conexión
+        window.addEventListener('online', actualizarEstadoInternet);
+        window.addEventListener('offline', actualizarEstadoInternet);
+    </script>
+</body>
+</html>
