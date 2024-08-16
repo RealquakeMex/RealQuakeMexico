@@ -263,8 +263,8 @@
             } else {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
-                        new Notification("¡Notificación enviada!", {
-                            body: "Este es un mensaje de prueba para la notificación.",
+                        new Notification("¡Sismo en proceso!", {
+                            body: "Simulacro - 🔔 Sentiras un sismo MODERADO en 60 segundos,Posible epicentro en Acapulco de Juarez Guerrero 🔔",
                             icon: "logo.png"
                         });
                     } else {
