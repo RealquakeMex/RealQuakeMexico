@@ -249,17 +249,17 @@
         // Función para enviar una notificación
         function enviarNotificacion() {
             if (!("Notification" in window)) {
-                alert("Este navegador no soporta notificaciones.");
+                alert("Ups!,Parece que tu telefono no dejo a RealQuake EBS conectarte con las notificaciones,Intentalo mas tarde.");
                 return;
             }
 
             if (Notification.permission === "granted") {
-                new Notification("¡Notificación enviada!", {
-                    body: "Este es un mensaje de prueba para la notificación.",
+                new Notification("¡Sismo en proceso!", {
+                    body: "Simulacro - 🔔 Sentiras un sismo MODERADO en 60 segundos,Posible epicentro en Acapulco de Juarez Guerrero 🔔",
                     icon: "logo.png"
                 });
             } else if (Notification.permission === "denied") {
-                alert("Las notificaciones están desactivadas.");
+                alert("No pudimos enviar una notficacion: No tenemos permisos necesarios..");
             } else {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
@@ -277,11 +277,11 @@
         function actualizarEstadoInternet() {
             const statusElement = document.getElementById('internet-status');
             if (navigator.onLine) {
-                statusElement.innerHTML = `<h2>Conectado</h2><p>Conexión a internet</p>`;
+                statusElement.innerHTML = `<h2>Conectado</h2><p>Recibiras alertas en tiempo real</p>`;
                 statusElement.classList.remove('inactive');
                 statusElement.classList.add('connected');
             } else {
-                statusElement.innerHTML = `<h2>Desconectado</h2><p>Sin conexión a internet</p>`;
+                statusElement.innerHTML = `<h2>Desconectado</h2><p>Sin conexión a internet,No estas protegido</p>`;
                 statusElement.classList.remove('connected');
                 statusElement.classList.add('inactive');
             }
