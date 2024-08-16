@@ -254,8 +254,8 @@
             }
 
             if (Notification.permission === "granted") {
-                new Notification("¡Notificación enviada!", {
-                    body: "Este es un mensaje de prueba para la notificación.",
+                new Notification("Simulacro", {
+                    body: "Sentiras sismo VIOLENTO en 70 segundos,Manten la calma y evacua",
                     icon: "logo.png"
                 });
             } else if (Notification.permission === "denied") {
@@ -263,8 +263,8 @@
             } else {
                 Notification.requestPermission().then(permission => {
                     if (permission === "granted") {
-                        new Notification("¡Notificación enviada!", {
-                            body: "Este es un mensaje de prueba para la notificación.",
+                        new Notification("Simulacro", {
+                            body: "Sentiras sismo VIOLENTO en 70 segundos,Manten la calma y evacua",
                             icon: "logo.png"
                         });
                     } else {
@@ -293,8 +293,7 @@
                     function(position) {
                         mostrarModal();
                         // Aquí puedes hacer algo con la latitud y longitud si es necesario
-                        console.log("Latitud: " + position.coords.latitude);
-                        console.log("Longitud: " + position.coords.longitude);
+                        //Nope,nada de codigo log.
                     },
                     function(error) {
                         switch(error.code) {
